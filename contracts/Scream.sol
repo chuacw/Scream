@@ -9,6 +9,7 @@ contract Scream {
   uint public creationTime;
   uint public fee;
   uint public idfee;
+  mapping (address => uint) public balances;
 
   modifier onlyOwner() {
     require(msg.sender == owner);
@@ -16,7 +17,7 @@ contract Scream {
   }
 
   modifier costs(uint _amount) {
-    if (msg.sender != owner)
+    if ((msg.sender != owner) || (balances[msg.sender] < _amount))
       require (msg.value >= _amount);
     _;
   }
@@ -29,7 +30,7 @@ contract Scream {
   function Scream() public {
     owner = msg.sender;
     creationTime = now;
-    fee = 0.3 finney; // this is about 10 USD cents
+    fee = 0.3 finney;   // this is about 10 USD cents
     idfee = 0.3 finney; // another 10 cents to identify yourself...
   }
 

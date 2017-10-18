@@ -1,0 +1,97 @@
+<html>
+<head>
+<script type="text/javascript" src="node_modules/web3/dist/web3.js"></script>
+<script type="text/javascript" src="./app/javascripts/bundled.js"></script>
+<script type='text/javascript'>
+
+var Web3 = require('web3');
+var web3 = new Web3();
+web3.setProvider(new web3.providers.HttpProvider());
+
+var ScreamContractAddr = "0x86E5b6D7648b8B994886aeB98E2B4770675e608D";
+
+window.addEventListener('load', function () {
+
+// Checking if Web3 has been injected by the browser (Mist/MetaMask)
+	if (typeof web3 !== 'undefined') {
+
+		// Use Mist/MetaMask's provider
+		window.web3 = new Web3(web3.currentProvider);
+		console.log("web3: " + web3);
+		console.log("window.web3: " + window.web3);
+
+		if (web3.currentProvider.isMetaMask === true) {
+			if (typeof web3.eth.defaultAccount === 'undefined') {
+				// document.body.innerHTML = '<body><h1>Oops! Your browser does not support Ethereum Ãapps.</h1></body>';
+			}
+			else {
+				document.write("Starting app...");
+				document.body.innerHTML = '<body><h1>App running.</h1></body>';
+			}
+		}
+		else {
+			// fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+		   window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+		   // document.body.innerHTML = '<body><h1>Provider loaded.</h1></body>';
+
+		}
+
+	}
+})
+
+function formatDate(date) {
+  let monthNames = [
+    "Jan", "Feb", "Mar",
+    "Apr", "May", "Jun", "Jul",
+    "Aug", "Sep", "Oct",
+    "Nov", "Dec"
+  ];
+
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
+
+  return day + ' ' + monthNames[monthIndex] + ' ' + year + " " + date.getHours() + ":" + date.getMinutes();
+}
+
+
+options1 = {
+  fromBlock: 4289879,
+  toBlock: 'latest',
+  address: ScreamContractAddr,
+  topics: [web3.sha3('__Shout(string)')]
+}
+
+const filter = web3.eth.filter(options1);
+
+function displayEvent(prefix, event) {
+	let timestamp = web3.eth.getBlock(event.blockNumber).timestamp;
+	let date1 = new Date(timestamp*1000);
+	console.log(prefix + ": " + event.data);
+	let data = event.data.replace("0x", "");
+	let msg = coder.decodeParams(["string"], data);
+	document.writeln(prefix + ": " + formatDate(date1) + " - " + msg + "<br />");
+}
+
+
+filter.watch((error, event) => {
+  if (!error) {
+    displayEvent("event1", event);
+  }
+})
+
+
+// Additionally you can start watching right away, by passing a callback:
+ web3.eth.filter(options1, function(error, event){
+   if (!error) {
+    displayEvent("event2", event);
+   }
+ });
+
+
+</script>
+</head>
+<body>
+
+</body>
+</html>
