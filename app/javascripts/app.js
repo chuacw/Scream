@@ -1,8 +1,8 @@
-var Web3 = require('web3');
-var web3 = new Web3();
+let Web3 = require('web3');
+let web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider());
 
-var ScreamContractAddr = "0x86E5b6D7648b8B994886aeB98E2B4770675e608D"; // on Kovan
+let ScreamContractAddr = "0x86E5b6D7648b8B994886aeB98E2B4770675e608D"; // on Kovan
 
 window.addEventListener('load', function () {
 
@@ -16,7 +16,7 @@ window.addEventListener('load', function () {
 
   if (web3.currentProvider.isMetaMask) {
    if (typeof web3.eth.defaultAccount === 'undefined') {
-    // document.body.innerHTML = '<body><h1>Oops! Your browser does not support Ethereum Ãapps.</h1></body>';
+    // document.body.innerHTML = '<body><h1>Oops! Your browser does not support Ethereum Dapps.</h1></body>';
     console.log("Case 1");
    }
    else {
@@ -48,9 +48,9 @@ function formatDate(date) {
     "Nov", "Dec"
   ];
 
-  var day = date.getDate();
-  var monthIndex = date.getMonth();
-  var year = date.getFullYear();
+  let day = date.getDate();
+  let monthIndex = date.getMonth();
+  let year = date.getFullYear();
 
   return day + ' ' + monthNames[monthIndex] + ' ' + year + " " + zeroize(date.getHours()) + ":" + zeroize(date.getMinutes());
 }
@@ -139,6 +139,7 @@ function updateStatus(text) {
 }
 
 function updateNotRunning() {
+  updateStatus("<B>The blockchain node this site connects to is currently not running<br>Waiting for node to come online...</B>");
 }
 
 function Reconnect() {
